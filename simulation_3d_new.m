@@ -1,4 +1,5 @@
-function [t_out, s_out] = simulation_3d(trajhandle, controlhandle)
+function [t_out, s_out, QP] = simulation_3d_new(trajhandle, controlhandle)
+%[t_out, s_out] = simulation_3d(trajhandle, controlhandle)
 % NOTE: This srcipt will not run as expected unless you fill in proper
 % code in trajhandle and controlhandle
 % You should not modify any part of this script except for the
@@ -14,7 +15,7 @@ addpath('utils');
 real_time = true;
 
 % max time
-max_time = 20;
+max_time = 10;
 
 % parameters for simulation
 params = sys_params;
@@ -123,7 +124,7 @@ plot_state(h_vel, QP.state_hist(4:6,:), QP.time_hist, 'vel', 'vic');
 plot_state(h_vel, QP.state_des_hist(4:6,:), QP.time_hist, 'vel', 'des');
 
 if(~isempty(err))
-    error(err);
+%    error(err);
 end
 
 disp('finished.')

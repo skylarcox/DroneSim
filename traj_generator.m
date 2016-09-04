@@ -29,22 +29,21 @@ function [ desired_state ] = traj_generator(t, state, waypoints)
 % using a constant velocity of 0.5 m/s. Note that this is only a sample, and you
 % should write your own trajectory generator for the submission.
 
-persistent waypoints0 traj_time allCoeffs multFact time
+persistent waypoints0 traj_time allCoeffs multFact time d0
 if nargin > 2
     waypoints0 = waypoints';
     n = size(waypoints0, 1) - 1;
     multFact = 8;
     
     
-%     avgSpeed = 1.5; %m/sec
-%     d = waypoints(:,2:end) - waypoints(:,1:end-1);
-%     d0 = 1/(avgSpeed) * sqrt(d(1,:).^2 + d(2,:).^2 + d(3,:).^2);
+    avgSpeed = 2.0; %m/sec
+    d = waypoints(:,2:end) - waypoints(:,1:end-1);
+    d0 = 1/(avgSpeed) * sqrt(d(1,:).^2 + d(2,:).^2 + d(3,:).^2);
     
     
-    time = 1;
-    traj_time = 0:time:n*time;
-%     traj_time = [0, cumsum(d0)];
-    
+    %time = 10;
+    %traj_time = [0:cumsum(d0)];
+    traj_time = [0, cumsum(d0)];
     
     
     A = zeros(multFact * n); % Row format is a11, a12,...a21...a8n
@@ -132,8 +131,8 @@ else
             if(t_index > 1)
                 t = t - traj_time(t_index);
             end
-            %scale = t/d0(t_index);
-            scale = t / time;
+            scale = t/d0(t_index);
+            %scale = t / time;
             
             coeffs = allCoeffs(((t_index-1)*multFact + 1): (t_index*8), :);
             desired_state.pos = ([1, scale, scale^2, scale^3, scale^4, scale^5, scale^6, scale^7] * coeffs)';
